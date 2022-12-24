@@ -1,6 +1,8 @@
 package main;
 
+import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -52,8 +54,19 @@ public class KlijentNit extends Thread {
 					brisanjeRezervacije(odgovor, poruka);
 					break;
 				case REZERVACIJA:
-					rezervacijaKarata(odgovor, poruka);
-					break;
+					String brojRezervacije = rezervacijaKarata(odgovor, poruka, socket);
+					izlaz = new ObjectOutputStream(socket.getOutputStream());
+					izlaz.writeObject(odgovor);
+
+					if (odgovor.isUspeh()) {
+						byte[] buffer = new byte[1024*100];
+						FileInputStream fileInputStream = new FileInputStream(
+								"rezervacije/" + brojRezervacije + ".txt");
+						int bytes = fileInputStream.read(buffer, 0, buffer.length);
+						DataOutputStream fajlIzlaz = new DataOutputStream(socket.getOutputStream());
+						fajlIzlaz.write(buffer, 0, bytes);
+					}
+					continue;
 				case VRATI_BROJ_KARATA:
 					vracanjeBrKarata(odgovor);
 					break;
@@ -88,7 +101,7 @@ public class KlijentNit extends Thread {
 
 	}
 
-	private void rezervacijaKarata(Odgovor odgovor, Poruka poruka) throws Exception {
+	private String rezervacijaKarata(Odgovor odgovor, Poruka poruka, Socket socket) throws Exception {
 		// provera broja raspolozivih karata
 
 		// uzmi iz baze samo karte
@@ -111,7 +124,7 @@ public class KlijentNit extends Thread {
 
 		if (zbirKarata + poruka.getKarte() > 20 || zbirVipKarata + poruka.getVipKarte() > 5) {
 			odgovor.setUspeh(false);
-			return;
+			return null;
 		}
 
 		// proveri karte tog korisnika
@@ -138,43 +151,44 @@ public class KlijentNit extends Thread {
 
 		if (noveKarte + noveVipKarte > 4) {
 			odgovor.setUspeh(false);
-			return;
+			return null;
 		}
 		upit = "UPDATE korisnik SET karte=" + noveKarte + ", vipkarte= " + noveVipKarte + " WHERE username= '"
 				+ poruka.getUsername() + "'";
 
 		int uspeh = s.executeUpdate(upit);
+		String brojRezervacije = null;
 		if (uspeh != 1) {
 			odgovor.setUspeh(false);
 		} else {
-			potvrdaRezervacije(odgovor, poruka.getKarte(), poruka.getVipKarte(), ime, prezime, poruka.getUsername(), email, jmbg);
+			brojRezervacije = potvrdaRezervacije(odgovor, poruka.getKarte(), poruka.getVipKarte(), ime, prezime,
+					poruka.getUsername(), email, jmbg);
 			odgovor.setUspeh(true);
+			odgovor.setBrojRezervacije(brojRezervacije);
 		}
 
 		s.close();
-
+		return brojRezervacije;
 	}
 
-	private void potvrdaRezervacije(Odgovor odgovor, int karteKorisnika, int vipKarteKorisnika, String ime, String prezime, String username, String email, String jmbg) {
+	private String potvrdaRezervacije(Odgovor odgovor, int karteKorisnika, int vipKarteKorisnika, String ime,
+			String prezime, String username, String email, String jmbg) {
 		try {
-		    String brojRezervacije = String.valueOf(100000 + (new Random()).nextInt(900000));
-		    
-		    String tekst = "Potvrda rezervacije "
-		    		+ "\nBroj rezervacije: " + brojRezervacije
-		    		+ "\nBroj rezervisanih obicnih karata: " + karteKorisnika
-		    		+ "\nBroj rezervisanih vip karata: " + vipKarteKorisnika
-		    		+ "\nKorisnicko ime: " + username
-		    		+ "\nIme i prezime: " + ime + " " + prezime
-		    		+ "\nEmail: " + email
-		    		+ "\nJMBG: " + jmbg
-		    		+ "\nHvala na rezervaciji!";
-			
-			FileWriter myWriter = new FileWriter("rezervacije/" + brojRezervacije +".txt") ;
+			String brojRezervacije = String.valueOf(100000 + (new Random()).nextInt(900000));
+
+			String tekst = "Potvrda rezervacije " + "\nBroj rezervacije: " + brojRezervacije
+					+ "\nBroj rezervisanih obicnih karata: " + karteKorisnika + "\nBroj rezervisanih vip karata: "
+					+ vipKarteKorisnika + "\nKorisnicko ime: " + username + "\nIme i prezime: " + ime + " " + prezime
+					+ "\nEmail: " + email + "\nJMBG: " + jmbg + "\nHvala na rezervaciji!";
+
+			FileWriter myWriter = new FileWriter("rezervacije/" + brojRezervacije + ".txt");
 			myWriter.write(tekst);
 			myWriter.close();
 			System.out.println("Kreiran fajl!");
+			return brojRezervacije;
 		} catch (Exception e) {
 			e.printStackTrace();
+			return "";
 		}
 	}
 

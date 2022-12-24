@@ -1,0 +1,9 @@
+Potvrda rezervacije 
+Broj rezervacije: 536442
+Broj rezervisanih obicnih karata: 2
+Broj rezervisanih vip karata: 1
+Korisnicko ime: misko
+Ime i prezime: milos ninkovic
+Email: misko@gmail.com
+JMBG: 2804001715061
+Hvala na rezervaciji!

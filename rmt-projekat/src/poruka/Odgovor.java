@@ -3,11 +3,12 @@ package poruka;
 import java.io.Serializable;
 
 public class Odgovor implements Serializable {
-	
+
 	private boolean uspeh;
 	private int karte;
 	private int vipKarte;
-	
+	private String brojRezervacije;
+
 	public Odgovor(boolean uspeh, int karte, int vipKarte) {
 		super();
 		this.uspeh = uspeh;
@@ -42,12 +43,15 @@ public class Odgovor implements Serializable {
 	public void setVipKarte(int vipKarte) {
 		this.vipKarte = vipKarte;
 	}
-	
-	
-	
-	
-	
-	
+
+	public String getBrojRezervacije() {
+		return brojRezervacije;
+	}
+
+	public void setBrojRezervacije(String brojRezervacije) {
+		this.brojRezervacije = brojRezervacije;
+	}
+
 	
 
 }

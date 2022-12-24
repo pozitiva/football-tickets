@@ -1,0 +1,9 @@
+Potvrda rezervacije 
+Broj rezervacije: 493749
+Broj rezervisanih obicnih karata: 1
+Broj rezervisanih vip karata: 0
+Korisnicko ime: iva
+Ime i prezime: iva djo
+Email: iva@gmail.com
+JMBG: 2804001715061
+Hvala na rezervaciji!
