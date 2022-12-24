@@ -5,23 +5,22 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 
 import gui.GlavniEkran;
+import gui.ProzorLogin;
 
 public class Main {
-	
-	
-	private static String username = "iva";
+
+	private static String username = "";
 	private static Socket socket;
 
 	public static void main(String[] args) {
 		try {
-			socket= new Socket("localhost", 8090);
+			socket = new Socket("localhost", 8090);
 			System.out.println("Povezan na server");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		GlavniEkran ge= new GlavniEkran();
-		ge.setVisible(true);
-		
+		ProzorLogin log = new ProzorLogin();
+		log.setVisible(true);
 
 	}
 
@@ -40,9 +39,5 @@ public class Main {
 	public static void setSocket(Socket socket) {
 		Main.socket = socket;
 	}
-	
-	
-	
-	
-	
+
 }

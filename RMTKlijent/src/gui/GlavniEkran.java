@@ -23,9 +23,6 @@ public class GlavniEkran extends JFrame {
 
 	private JPanel contentPane;
 
-	/**
-	 * Create the frame.
-	 */
 	public GlavniEkran() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
@@ -49,6 +46,9 @@ public class GlavniEkran extends JFrame {
 		JButton btnObrisi = new JButton("Obrisi rezervaciju");
 		btnObrisi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				ProzorBrisanja pb = new ProzorBrisanja();
+				pb.setVisible(true);
+
 			}
 		});
 		btnObrisi.setBounds(29, 84, 144, 36);
@@ -74,11 +74,9 @@ public class GlavniEkran extends JFrame {
 
 					} else {
 						JOptionPane.showMessageDialog(null, "Desila se greska", "Greska", JOptionPane.ERROR_MESSAGE);
-
 					}
 
 				} catch (Exception e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 

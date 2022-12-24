@@ -27,9 +27,6 @@ public class ProzorRezervacije extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
 
-	/**
-	 * Create the dialog.
-	 */
 	public ProzorRezervacije() {
 		setBounds(100, 100, 450, 300);
 		getContentPane().setLayout(new BorderLayout());
@@ -41,12 +38,6 @@ public class ProzorRezervacije extends JDialog {
 		cbObicne.setModel(new DefaultComboBoxModel(new String[] { "0", "1", "2", "3", "4" }));
 		cbObicne.setBounds(147, 42, 92, 22);
 		contentPanel.add(cbObicne);
-
-//		String[] vrednosti = new String[odgovor.brojKarata()+1];
-//		for(int i = 0; i<=odgovor.getKarte(); i++) {
-//			vrednosti[i]=String.valueOf(i);
-//		}
-//		cbObicne.setModel(new DefaultComboBoxModel(vrednosti));
 		
 		JComboBox cbVip = new JComboBox();
 		cbVip.setModel(new DefaultComboBoxModel(new String[] { "0", "1", "2", "3", "4" }));
