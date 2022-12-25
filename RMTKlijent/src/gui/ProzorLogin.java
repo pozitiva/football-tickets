@@ -1,7 +1,5 @@
 package gui;
 
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -16,7 +14,6 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.awt.event.ActionEvent;
@@ -71,7 +68,6 @@ public class ProzorLogin extends JFrame {
 					Odgovor odgovor = (Odgovor) ulaz.readObject();
 
 					if (odgovor.isUspeh()) {
-//						JOptionPane.showMessageDialog(null, "Uspesno ste se prijavili");
 						Main.setUsername(txtUsername.getText());
 						GlavniEkran ge = new GlavniEkran();
 						ge.setVisible(true);

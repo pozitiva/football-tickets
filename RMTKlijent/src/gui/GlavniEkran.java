@@ -1,7 +1,5 @@
 package gui;
 
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -14,10 +12,10 @@ import poruka.Poruka;
 
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.awt.event.ActionEvent;
+import javax.swing.JLabel;
 
 public class GlavniEkran extends JFrame {
 
@@ -84,5 +82,9 @@ public class GlavniEkran extends JFrame {
 		});
 		btnVidi.setBounds(29, 155, 175, 44);
 		contentPane.add(btnVidi);
+		
+		JLabel lblUlogovani = new JLabel("Ulogovani korisnik: " + Main.getUsername());
+		lblUlogovani.setBounds(29, 222, 49, 14);
+		contentPane.add(lblUlogovani);
 	}
 }

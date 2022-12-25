@@ -3,6 +3,7 @@ package poruka;
 import java.io.Serializable;
 
 public class Poruka implements Serializable {
+	
 	private Operacija operacija;
 	private String username;
 	private String password;
@@ -12,10 +13,10 @@ public class Poruka implements Serializable {
 	private String email;
 	private int karte;
 	private int vipKarte;
+	
 	public Poruka() {
 		// TODO Auto-generated constructor stub
 	}
-	
 	
 	public Poruka(Operacija operacija, String username, String password, String ime, String prezime, String jmbg,
 			String email, int karte, int vipKarte) {

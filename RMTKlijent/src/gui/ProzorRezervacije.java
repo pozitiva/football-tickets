@@ -1,8 +1,6 @@
 package gui;
 
 import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
@@ -18,10 +16,8 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.DefaultComboBoxModel;
 import java.awt.event.ActionListener;
-import java.io.DataInput;
 import java.io.DataInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.awt.event.ActionEvent;
@@ -59,7 +55,6 @@ public class ProzorRezervacije extends JDialog {
 		btnRezervisi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
-				// pripremi poruku
 				Poruka poruka = new Poruka();
 				poruka.setUsername(Main.getUsername());
 				poruka.setKarte(Integer.parseInt((String) cbObicne.getSelectedItem()));
@@ -78,27 +73,25 @@ public class ProzorRezervacije extends JDialog {
 					return;
 				}
 
-				// posalji poruku
 				try {
 					ObjectOutputStream izlaz = new ObjectOutputStream(Main.getSocket().getOutputStream());
 					izlaz.writeObject(poruka);
 
-					// primi odgovor
 					ObjectInputStream ulaz = new ObjectInputStream(Main.getSocket().getInputStream());
 					Odgovor odgovor = (Odgovor) ulaz.readObject();
 
-					// obrada odgovora
 					if (odgovor.isUspeh()) {
 						JOptionPane.showMessageDialog(null, "Uspesno ste izvrsili rezervaciju");
 
 						String brojRezervacije = odgovor.getBrojRezervacije();
 
-						byte[] buffer = new byte[1024*100];
+						byte[] buffer = new byte[1024 * 100];
 						DataInputStream fajlUlaz = new DataInputStream(Main.getSocket().getInputStream());
-						int bytes = fajlUlaz.read(buffer, 0, buffer.length);
-						FileOutputStream fileOutputStream = new FileOutputStream(
-								"C:\\Users\\Iva\\Downloads\\" + brojRezervacije + ".txt");
-						fileOutputStream.write(buffer, 0, bytes);
+						int duzina = fajlUlaz.read(buffer, 0, buffer.length);
+						try (FileOutputStream fileOutputStream = new FileOutputStream(
+								"C:\\Users\\Iva\\Downloads\\" + brojRezervacije + ".txt")) {
+							fileOutputStream.write(buffer, 0, duzina);
+						}
 					} else {
 						JOptionPane.showMessageDialog(null, "Rezervacija nije uspela", "Greska",
 								JOptionPane.ERROR_MESSAGE);

@@ -37,12 +37,11 @@ public class KlijentNit extends Thread {
 
 		while (!interrupted()) {
 			try {
-				// primi zahtev tj. poruku
 				ulaz = new ObjectInputStream(socket.getInputStream());
 				Poruka poruka = (Poruka) ulaz.readObject();
 
 				Odgovor odgovor = new Odgovor();
-				// obradi poruku
+				
 				switch (poruka.getOperacija()) {
 				case REGISTRACIJA:
 					registrovanjeKorisnika(odgovor, poruka);
@@ -60,11 +59,13 @@ public class KlijentNit extends Thread {
 
 					if (odgovor.isUspeh()) {
 						byte[] buffer = new byte[1024*100];
-						FileInputStream fileInputStream = new FileInputStream(
-								"rezervacije/" + brojRezervacije + ".txt");
-						int bytes = fileInputStream.read(buffer, 0, buffer.length);
-						DataOutputStream fajlIzlaz = new DataOutputStream(socket.getOutputStream());
-						fajlIzlaz.write(buffer, 0, bytes);
+						try (FileInputStream fileInputStream = new FileInputStream(
+								"rezervacije/" + brojRezervacije + ".txt")) {
+							int bytes = fileInputStream.read(buffer, 0, buffer.length);
+							
+							DataOutputStream fajlIzlaz = new DataOutputStream(socket.getOutputStream());
+							fajlIzlaz.write(buffer, 0, bytes);
+						}
 					}
 					continue;
 				case VRATI_BROJ_KARATA:
@@ -75,13 +76,11 @@ public class KlijentNit extends Thread {
 					break;
 				}
 
-				// posaljemo odgovor
+				// saljem odgovor
 				izlaz = new ObjectOutputStream(socket.getOutputStream());
 				izlaz.writeObject(odgovor);
 
 			} catch (Exception e) {
-//				System.out.println("desila se greska");
-				e.printStackTrace();
 				interrupt();
 			}
 
@@ -95,16 +94,13 @@ public class KlijentNit extends Thread {
 				kon = DriverManager.getConnection("jdbc:mysql://localhost:3306/rmt", "root", "");
 			}
 		} catch (Exception e) {
-
 			e.printStackTrace();
 		}
 
 	}
 
 	private String rezervacijaKarata(Odgovor odgovor, Poruka poruka, Socket socket) throws Exception {
-		// provera broja raspolozivih karata
-
-		// uzmi iz baze samo karte
+		
 		String upit = "SELECT karte,vipKarte FROM korisnik";
 		Statement s = kon.createStatement();
 		ResultSet rs = s.executeQuery(upit);
@@ -119,16 +115,12 @@ public class KlijentNit extends Thread {
 			zbirVipKarata += vipkarte;
 		}
 
-		// uporedi sa kapacitetom
-		// ako je popunjeno onda prekidam
-
 		if (zbirKarata + poruka.getKarte() > 20 || zbirVipKarata + poruka.getVipKarte() > 5) {
 			odgovor.setUspeh(false);
 			return null;
 		}
 
 		// proveri karte tog korisnika
-		// uzmi iz baze karte samo ovog korisnika
 		upit = "SELECT * FROM korisnik WHERE username= '" + poruka.getUsername() + "'";
 		rs = s.executeQuery(upit);
 
@@ -140,12 +132,7 @@ public class KlijentNit extends Thread {
 		String prezime = rs.getString("prezime");
 		String jmbg = rs.getString("jmbg");
 
-		// uporedi sa kapacitetom za jednu osobu
-		// ako je prekoracio onda prekidam
-
-		// obavljamo rezervaciju
-
-		// menjamo podatake o kartama za tog korisnika u bazi
+		// menjam podatake o kartama za tog korisnika u bazi
 		int noveKarte = karteKorisnika + poruka.getKarte();
 		int noveVipKarte = vipKarteKorisnika + poruka.getVipKarte();
 
@@ -155,8 +142,8 @@ public class KlijentNit extends Thread {
 		}
 		upit = "UPDATE korisnik SET karte=" + noveKarte + ", vipkarte= " + noveVipKarte + " WHERE username= '"
 				+ poruka.getUsername() + "'";
-
 		int uspeh = s.executeUpdate(upit);
+		
 		String brojRezervacije = null;
 		if (uspeh != 1) {
 			odgovor.setUspeh(false);
@@ -290,19 +277,6 @@ public class KlijentNit extends Thread {
 				odgovor.setUspeh(false);
 				return;
 			}
-
-//			String upit = "SELECT username,password FROM korisnik";
-//			Statement s = kon.createStatement();
-//			ResultSet rs = s.executeQuery(upit);
-//
-//			while (rs.next()) {
-//				if (poruka.getUsername() == rs.getString("username")
-//						&& poruka.getPassword() == (rs.getString("password"))) {
-//					odgovor.setUspeh(true);
-//				} else {
-//					odgovor.setUspeh(false);
-//				}
-//			}
 
 			s.close();
 

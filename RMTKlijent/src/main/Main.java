@@ -1,10 +1,6 @@
 package main;
 
-import java.io.IOException;
 import java.net.Socket;
-import java.net.UnknownHostException;
-
-import gui.GlavniEkran;
 import gui.ProzorLogin;
 
 public class Main {
@@ -16,12 +12,11 @@ public class Main {
 		try {
 			socket = new Socket("localhost", 8090);
 			System.out.println("Povezan na server");
+			ProzorLogin log = new ProzorLogin();
+			log.setVisible(true);
 		} catch (Exception e) {
-			e.printStackTrace();
+			System.out.println("Server nije pokrenut, gasim aplikaciju");
 		}
-		ProzorLogin log = new ProzorLogin();
-		log.setVisible(true);
-
 	}
 
 	public static String getUsername() {
