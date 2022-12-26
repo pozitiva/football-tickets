@@ -41,7 +41,7 @@ public class KlijentNit extends Thread {
 				Poruka poruka = (Poruka) ulaz.readObject();
 
 				Odgovor odgovor = new Odgovor();
-				
+
 				switch (poruka.getOperacija()) {
 				case REGISTRACIJA:
 					registrovanjeKorisnika(odgovor, poruka);
@@ -58,11 +58,11 @@ public class KlijentNit extends Thread {
 					izlaz.writeObject(odgovor);
 
 					if (odgovor.isUspeh()) {
-						byte[] buffer = new byte[1024*100];
+						byte[] buffer = new byte[1024 * 100];
 						try (FileInputStream fileInputStream = new FileInputStream(
 								"rezervacije/" + brojRezervacije + ".txt")) {
 							int bytes = fileInputStream.read(buffer, 0, buffer.length);
-							
+
 							DataOutputStream fajlIzlaz = new DataOutputStream(socket.getOutputStream());
 							fajlIzlaz.write(buffer, 0, bytes);
 						}
@@ -100,7 +100,17 @@ public class KlijentNit extends Thread {
 	}
 
 	private String rezervacijaKarata(Odgovor odgovor, Poruka poruka, Socket socket) throws Exception {
-		
+
+		if (poruka.getUsername() == null || poruka.getUsername().equals("") || poruka.getPassword() == null
+				|| poruka.getPassword().equals("") || poruka.getEmail() == null || poruka.getEmail().equals("")
+				|| poruka.getIme() == null || poruka.getIme().equals("") || poruka.getPrezime() == null
+				|| poruka.getPrezime().equals("") || poruka.getJmbg() == null || poruka.getJmbg().equals("")) {
+
+			odgovor.setUspeh(false);
+			odgovor.setObjasnjenje("Morate uneti sva polja prilikom registracije!");
+
+		}
+
 		String upit = "SELECT karte,vipKarte FROM korisnik";
 		Statement s = kon.createStatement();
 		ResultSet rs = s.executeQuery(upit);
@@ -117,6 +127,7 @@ public class KlijentNit extends Thread {
 
 		if (zbirKarata + poruka.getKarte() > 20 || zbirVipKarata + poruka.getVipKarte() > 5) {
 			odgovor.setUspeh(false);
+			odgovor.setObjasnjenje("Nema dovoljno slobodnih karata za vasu rezervaciju. ");
 			return null;
 		}
 
@@ -138,12 +149,13 @@ public class KlijentNit extends Thread {
 
 		if (noveKarte + noveVipKarte > 4) {
 			odgovor.setUspeh(false);
+			odgovor.setObjasnjenje("Ne mozete rezervisati vise od 4 karte!");
 			return null;
 		}
 		upit = "UPDATE korisnik SET karte=" + noveKarte + ", vipkarte= " + noveVipKarte + " WHERE username= '"
 				+ poruka.getUsername() + "'";
 		int uspeh = s.executeUpdate(upit);
-		
+
 		String brojRezervacije = null;
 		if (uspeh != 1) {
 			odgovor.setUspeh(false);
@@ -261,6 +273,12 @@ public class KlijentNit extends Thread {
 	private void login(Odgovor odgovor, Poruka poruka) {
 
 		try {
+
+			if (poruka.getUsername() == null || poruka.getUsername().equals("") || poruka.getPassword() == null
+					|| poruka.getPassword().equals("")) {
+				JOptionPane.showMessageDialog(null, "Morate uneti sva polja prilikom prijavljivanja!", "Greska",
+						JOptionPane.ERROR_MESSAGE);
+			}
 			String upit = "SELECT username,password FROM korisnik WHERE username ='" + poruka.getUsername()
 					+ "' AND password = '" + poruka.getPassword() + "'";
 			Statement s = kon.createStatement();
@@ -275,6 +293,7 @@ public class KlijentNit extends Thread {
 				odgovor.setUspeh(true);
 			} else {
 				odgovor.setUspeh(false);
+				odgovor.setObjasnjenje("Uneli ste pogresne podatke.");
 				return;
 			}
 

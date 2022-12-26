@@ -84,7 +84,7 @@ public class GlavniEkran extends JFrame {
 		contentPane.add(btnVidi);
 		
 		JLabel lblUlogovani = new JLabel("Ulogovani korisnik: " + Main.getUsername());
-		lblUlogovani.setBounds(29, 222, 49, 14);
+		lblUlogovani.setBounds(29, 222, 160, 14);
 		contentPane.add(lblUlogovani);
 	}
 }

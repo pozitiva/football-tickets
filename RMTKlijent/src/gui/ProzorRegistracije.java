@@ -106,6 +106,17 @@ public class ProzorRegistracije extends JFrame {
 				poruka.setKarte(0);
 				poruka.setVipKarte(0);
 
+				if (txtUser.getText() == null || txtUser.getText().equals("") || txtPass.getText() == null
+						|| txtPass.getText().equals("") || txtEmail.getText() == null || txtEmail.getText().equals("")
+						|| txtIme.getText() == null || txtIme.getText().equals("") || txtPrezime.getText() == null
+						|| txtPrezime.getText().equals("") || txtJMBG.getText() == null
+						|| txtJMBG.getText().equals("")) {
+
+					JOptionPane.showMessageDialog(null, "Morate uneti sva polja prilikom registracije!", "Greska",
+							JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+
 				boolean jmbgBroj = poruka.getJmbg().chars().allMatch(Character::isDigit);
 				if (!jmbgBroj || poruka.getJmbg().length() != 13) {
 					JOptionPane.showMessageDialog(null, "Los format JMBG-a", "Greska", JOptionPane.ERROR_MESSAGE);
@@ -124,8 +135,8 @@ public class ProzorRegistracije extends JFrame {
 						pl.setVisible(true);
 						dispose();
 					} else {
-						JOptionPane.showMessageDialog(null, "Neuspesna registracija", "Greska",
-								JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(null, "Neuspesna registracija. " + odgovor.getObjasnjenje(),
+								"Greska", JOptionPane.ERROR_MESSAGE);
 					}
 				} catch (Exception e1) {
 					e1.printStackTrace();

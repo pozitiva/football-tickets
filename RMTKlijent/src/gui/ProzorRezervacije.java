@@ -93,8 +93,8 @@ public class ProzorRezervacije extends JDialog {
 							fileOutputStream.write(buffer, 0, duzina);
 						}
 					} else {
-						JOptionPane.showMessageDialog(null, "Rezervacija nije uspela", "Greska",
-								JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(null, "Rezervacija nije uspela. " + odgovor.getObjasnjenje(),
+								"Greska", JOptionPane.ERROR_MESSAGE);
 					}
 					dispose();
 				} catch (Exception e1) {

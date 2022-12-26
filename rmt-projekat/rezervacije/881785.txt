@@ -1,0 +1,9 @@
+Potvrda rezervacije 
+Broj rezervacije: 881785
+Broj rezervisanih obicnih karata: 3
+Broj rezervisanih vip karata: 0
+Korisnicko ime: marija
+Ime i prezime: marija ilic
+Email: marija@gmail.com
+JMBG: 2810001715345
+Hvala na rezervaciji!

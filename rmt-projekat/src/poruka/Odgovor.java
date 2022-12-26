@@ -8,6 +8,7 @@ public class Odgovor implements Serializable {
 	private int karte;
 	private int vipKarte;
 	private String brojRezervacije;
+	private String objasnjenje;
 
 	public Odgovor(boolean uspeh, int karte, int vipKarte) {
 		super();
@@ -52,6 +53,12 @@ public class Odgovor implements Serializable {
 		this.brojRezervacije = brojRezervacije;
 	}
 
-	
+	public String getObjasnjenje() {
+		return objasnjenje;
+	}
+
+	public void setObjasnjenje(String objasnjenje) {
+		this.objasnjenje = objasnjenje;
+	}
 
 }

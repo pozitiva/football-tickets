@@ -61,6 +61,13 @@ public class ProzorLogin extends JFrame {
 					poruka.setPassword(txtPass.getText());
 					poruka.setOperacija(Operacija.LOGIN);
 
+					if (txtUsername.getText() == null || txtUsername.getText().equals("") || txtPass.getText() == null
+							|| txtPass.getText().equals("")) {
+						JOptionPane.showMessageDialog(null, "Morate uneti sva polja prilikom prijavljivanja", "Greska",
+								JOptionPane.ERROR_MESSAGE);
+						return;
+					}
+
 					ObjectOutputStream izlaz = new ObjectOutputStream(Main.getSocket().getOutputStream());
 					izlaz.writeObject(poruka);
 
@@ -73,8 +80,8 @@ public class ProzorLogin extends JFrame {
 						ge.setVisible(true);
 						dispose();
 					} else {
-						JOptionPane.showMessageDialog(null, "Niste uspeli da se prijavite", "Greska",
-								JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(null, "Niste uspeli da se prijavite. " + odgovor.getObjasnjenje(),
+								"Greska", JOptionPane.ERROR_MESSAGE);
 						return;
 					}
 
